@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
 
@@ -34,5 +35,12 @@ public class BankSystemTest {
 
         assertEquals(1, bank.getCustomerList().size());
         assertTrue(bank.getCustomersInfoByNameOrder().contains("Nguyen Van A"));
+    }
+
+    @Test
+    void testCrossPlatformFilePath() {
+        File reportFile = new File("reports", "daily-summary.txt");
+        String hardcodedLinuxPath = "reports/daily-summary.txt";
+        assertEquals(hardcodedLinuxPath, reportFile.getPath());
     }
 }

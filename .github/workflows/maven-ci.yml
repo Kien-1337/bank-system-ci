@@ -1,4 +1,4 @@
-name: Java CI with Maven
+name: Java CI Matrix
 
 on:
   push:
@@ -8,7 +8,12 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout repository
@@ -22,12 +27,15 @@ jobs:
           cache: maven
 
       - name: Grant execute permission for mvnw
+        if: runner.os != 'Windows'
         run: chmod +x mvnw
 
-      - name: Build, Test and Package with Maven
+      - name: Run Maven Test and Package
         run: ./mvnw clean test package
+        shell: bash
 
       - name: Upload built JAR artifact
+        if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v4
         with:
           name: packaged-jar
