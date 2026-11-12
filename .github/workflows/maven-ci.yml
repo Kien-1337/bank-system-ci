@@ -1,4 +1,4 @@
-name: Java CI Matrix
+name: Java CI with JaCoCo Coverage
 
 on:
   push:
@@ -8,12 +8,7 @@ on:
 
 jobs:
   build:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
-
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
@@ -27,16 +22,20 @@ jobs:
           cache: maven
 
       - name: Grant execute permission for mvnw
-        if: runner.os != 'Windows'
         run: chmod +x mvnw
 
-      - name: Run Maven Test and Package
-        run: ./mvnw clean test package
-        shell: bash
+      - name: Verify Build, Checkstyle, Tests and JaCoCo Coverage
+        run: ./mvnw clean verify
 
       - name: Upload built JAR artifact
-        if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v4
         with:
           name: packaged-jar
           path: target/*.jar
+
+      - name: Upload JaCoCo coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-coverage-report
+          path: target/site/jacoco/
