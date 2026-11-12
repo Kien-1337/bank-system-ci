@@ -14,7 +14,7 @@ public class BankSystemTest {
         CheckingAccount checking = new CheckingAccount(1001L, 500.0);
         checking.deposit(200.0);
         checking.withdraw(100.0);
-        assertEquals(600.0, checking.getBalance());
+        assertEquals(9999.0, checking.getBalance());
         assertEquals(2, checking.getTransactionList().size());
 
         SavingsAccount savings = new SavingsAccount(2001L, 6000.0);
