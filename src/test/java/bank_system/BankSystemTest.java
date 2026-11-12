@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.junit.jupiter.api.Test;
 
 public class BankSystemTest {
@@ -40,7 +42,8 @@ public class BankSystemTest {
     @Test
     void testCrossPlatformFilePath() {
         File reportFile = new File("reports", "daily-summary.txt");
-        String hardcodedLinuxPath = "reports/daily-summary.txt";
-        assertEquals(hardcodedLinuxPath, reportFile.getPath());
+        Path expectedPath = Paths.get("reports", "daily-summary.txt");
+        assertEquals(expectedPath.toString(), reportFile.getPath());
+        assertEquals("reports" + File.separator + "daily-summary.txt", reportFile.getPath());
     }
 }
