@@ -1,4 +1,4 @@
-name: Java CI with JaCoCo Coverage
+name: Java CI with Maven Caching
 
 on:
   push:
@@ -19,23 +19,9 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
-          cache: maven
 
       - name: Grant execute permission for mvnw
         run: chmod +x mvnw
 
       - name: Verify Build, Checkstyle, Tests and JaCoCo Coverage
         run: ./mvnw clean verify
-
-      - name: Upload built JAR artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: packaged-jar
-          path: target/*.jar
-
-      - name: Upload JaCoCo coverage report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: jacoco-coverage-report
-          path: target/site/jacoco/
