@@ -1,13 +1,18 @@
-name: Java CI with Maven Caching
+name: Automated Code Review and CI
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "main", "master" ]
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
 
 jobs:
-  build:
+  code-review-and-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,5 +29,16 @@ jobs:
       - name: Grant execute permission for mvnw
         run: chmod +x mvnw
 
-      - name: Verify Build, Checkstyle, Tests and JaCoCo Coverage
-        run: ./mvnw clean verify
+      - name: Run Checkstyle and generate XML report
+        run: ./mvnw checkstyle:checkstyle
+
+      - name: Inline Checkstyle Review on PR
+        if: always() && github.event_name == 'pull_request'
+        uses: dbelyaev/action-checkstyle@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          checkstyle_report_xml: 'target/checkstyle-result.xml'
+          fail_on_error: true
+
+      - name: Build, Test and Enforce JaCoCo Coverage
+        run: ./mvnw verify -Dcheckstyle.skip=true
