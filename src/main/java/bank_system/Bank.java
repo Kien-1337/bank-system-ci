@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Bank {
+    public static final int bad_constant_name = 123;
     private static final String CUSTOMER_ID_REGEX = "\\d{9}";
     private static final int ACCOUNT_PARTS_MIN_LENGTH = 3;
     private static final Logger LOGGER = LoggerFactory.getLogger(Bank.class);
