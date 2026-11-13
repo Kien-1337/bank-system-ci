@@ -38,7 +38,14 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           checkstyle_report_xml: 'target/checkstyle-result.xml'
-          fail_on_error: true
+          level: error
+
+      - name: Fail if Checkstyle violations exist
+        run: |
+          if grep -q "<error " target/checkstyle-result.xml; then
+            echo "Checkstyle violations detected!"
+            exit 1
+          fi
 
       - name: Build, Test and Enforce JaCoCo Coverage
         run: ./mvnw verify -Dcheckstyle.skip=true
